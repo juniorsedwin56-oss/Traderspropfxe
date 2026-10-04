@@ -31,8 +31,6 @@ module.exports = async function handler(req, res) {
       return
     }
 
-    await ensureSchema()
-
     const trackingId = randomUUID()
     const merchantReference = `TP-${Date.now()}-${trackingId.slice(0, 8)}`
     const origin = process.env.PESAPAL_NOTIFICATION_URL
@@ -58,6 +56,7 @@ module.exports = async function handler(req, res) {
 
     const finalTrackingId = order.order_tracking_id || trackingId
 
+    await ensureSchema()
     await getPool().query(
       `INSERT INTO tp_payments (tracking_id, merchant_reference, client_email, product_type, amount, currency, status, metadata)
        VALUES ($1,$2,$3,$4,$5,$6,'PENDING',$7)`,
@@ -67,6 +66,7 @@ module.exports = async function handler(req, res) {
     res.status(200).json({ redirectUrl: order.redirect_url, trackingId: finalTrackingId, merchantReference })
   } catch (error) {
     console.error('[v0] pesapal checkout error:', error)
-    res.status(error.statusCode || 500).json({ message: error.message || 'Unable to start PesaPal checkout.' })
+    const statusCode = Number(error.statusCode) || 500
+    res.status(statusCode).json({ message: error.message || 'Unable to start PesaPal checkout.', code: statusCode === 503 ? 'PAYMENT_CONFIGURATION' : 'PAYMENT_PROVIDER_ERROR' })
   }
 }
