@@ -489,9 +489,27 @@ body{background:linear-gradient(180deg,#fff 0%,#f7f8f9 48%,#fff 100%);color:var(
 .learnIcon,.bookIcon{font-size:30px;flex:0 0 38px}.learnCard small,.bookCard small{color:#91a1b9}.learnCard h3,.bookCard h3{margin:6px 0}.learnCard p,.bookCard p{font-size:13px;line-height:1.5;color:#aeb9cb}.learnCard b{font-size:12px}.learnCard.done{border-color:rgba(80,210,140,.35)}
 .bookHeader{margin-top:28px}.bookHeader p{color:#9eabc0}.bookCard span{font-size:11px;color:#9eabc0}
 .lessonIcon{font-size:46px;margin-bottom:10px}.lessonText{font-size:17px;line-height:1.8;color:#c5cedd}.lessonTips{margin:22px 0;padding:16px;border-radius:14px;background:rgba(255,255,255,.05)}.lessonTips p{color:#b5c0d0}.learnComplete{width:100%;padding:14px;border:0;border-radius:12px;background:#fff;color:#07101d;font-weight:800;cursor:pointer}
-@media(max-width:600px){.learnPanel{padding:22px}.learnHero h1{font-size:27px}.learnGrid,.bookGrid{grid-template-columns:1fr}}
-</style>
-</head>
+  @media(max-width:600px){.learnPanel{padding:22px}.learnHero h1{font-size:27px}.learnGrid,.bookGrid{grid-template-columns:1fr}}
+> </style>
+  <style>
+  /* Offer and KYC dashboard refresh */
+  body:has(.tpOffersPage),body:has(.kycPage){background:#020403;color:#f5faf4}
+  .tpOffersPage,.kycPage{background:radial-gradient(circle at 85% 0%,rgba(117,255,39,.12),transparent 30%),linear-gradient(180deg,#020403 0%,#07100b 48%,#020403 100%);color:#f5faf4}
+  .tpOffersHero h1,.kycTitleRow h1,.tpOfferCard h2,.kycCardHead h2{color:#f8fff6}
+  .tpOffersHero p,.kycTitleRow p,.tpOfferDesc,.kycStatusText,.kycDocIntro{color:#a8b8aa}
+  .tpOffersBadge,.tpOfferIcon,.kycShield{background:rgba(124,255,43,.1);border-color:rgba(124,255,43,.28);box-shadow:0 12px 36px rgba(80,220,30,.12)}
+  .tpOfferCard,.kycCard{background:linear-gradient(145deg,rgba(19,31,23,.96),rgba(7,14,10,.98));border-color:rgba(166,207,169,.2);box-shadow:0 18px 48px rgba(0,0,0,.28)}
+  .tpOfferList{border-color:rgba(166,207,169,.16)}
+  .tpOfferList li{border-color:rgba(166,207,169,.16);color:#c7d4c9}
+  .tpOfferNote,.kycStatus,.kycTip{background:rgba(124,255,43,.06);border-color:rgba(124,255,43,.2);color:#b8cabb}
+  .tpOfferTag{background:rgba(124,255,43,.12);color:#9dff70}
+  .kycStatusMain,.kycStatusLabel,.kycField label,.kycDocName{color:#edf7ed}
+  .kycStatusCol+ .kycStatusCol{border-color:rgba(166,207,169,.2)}
+  .kycInput,.kycSelect,.kycPhoneCountry,.kycPrefix,.kycDocType{background:#0b1510;color:#edf7ed;border-color:rgba(166,207,169,.25)}
+  .kycInput::placeholder{color:#718174}.kycDocType.active{background:rgba(124,255,43,.08);border-color:#62cf50}.kycUpload{background:rgba(124,255,43,.05);border-color:rgba(124,255,43,.4)}
+  @media(max-width:700px){.tpOffersPage,.kycPage{padding-top:24px}.tpOffersHero h1,.kycTitleRow h1{font-size:30px}.tpOfferCard,.kycCard{border-radius:20px}}
+  </style>
+  </head>
 <body>
 <div id="app"></div>
 <script src="config.js"></script>
