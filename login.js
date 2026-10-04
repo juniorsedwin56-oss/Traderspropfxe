@@ -1,5 +1,5 @@
-const { handlePreflight, applyCors } = require('../../_lib/cors')
-const { ensureSchema, getPool, createSession, verifyPassword, publicUser } = require('../../_lib/auth')
+const { handlePreflight, applyCors } = require('./cors')
+const { ensureSchema, getPool, createSession, verifyPassword, publicUser } = require('./auth')
 module.exports = async function handler(req,res){
   if (handlePreflight(req,res)) return
   applyCors(req,res)
