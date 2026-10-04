@@ -39,6 +39,12 @@ module.exports = async function handler(req, res) {
       ? new URL(process.env.PESAPAL_NOTIFICATION_URL).origin
       : `https://${req.headers.host}`
     const callbackUrl = `${origin}/#/pesapal-callback`
+    const notificationId = String(process.env.PESAPAL_NOTIFICATION_ID || '').trim()
+    if (!notificationId) {
+      const error = new Error('PesaPal notification ID is not configured. Register the IPN URL and add PESAPAL_NOTIFICATION_ID.')
+      error.statusCode = 503
+      throw error
+    }
 
     const order = await pesapal.submitOrder({
       id: merchantReference,
@@ -46,7 +52,7 @@ module.exports = async function handler(req, res) {
       amount: numericAmount,
       description: description || 'TradersProp payment',
       callbackUrl,
-      notificationId: process.env.PESAPAL_NOTIFICATION_ID,
+      notificationId,
       email,
     })
 
