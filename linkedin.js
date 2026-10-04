@@ -1,6 +1,6 @@
 const crypto = require('crypto')
-const { ensureSchema, getPool, createSession, publicUser } = require('../../_lib/auth')
-const { applyCors } = require('../../_lib/cors')
+const { ensureSchema, getPool, createSession, publicUser } = require('./auth')
+const { applyCors } = require('./cors')
 
 const AUTH_ENDPOINT = 'https://www.linkedin.com/oauth/v2/authorization'
 const TOKEN_ENDPOINT = 'https://www.linkedin.com/oauth/v2/accessToken'
