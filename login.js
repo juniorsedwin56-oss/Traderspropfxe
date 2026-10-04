@@ -1,5 +1,5 @@
 const { handlePreflight, applyCors } = require('./cors')
-const { ensureSchema, getPool, publicUser } = require('./auth')
+const { getPool, publicUser } = require('./auth')
 const { signIn } = require('./supabase-auth')
 module.exports = async function handler(req,res){
   if (handlePreflight(req,res)) return
@@ -10,8 +10,8 @@ module.exports = async function handler(req,res){
     const auth = await signIn(normalized, password || '')
     let row
     try {
-      await ensureSchema()
-      const result=await getPool().query('SELECT * FROM tp_users WHERE id=$1 OR email=$2 LIMIT 1',[auth.user?.id, normalized])
+      const profileLookup=getPool().query('SELECT * FROM tp_users WHERE id=$1 OR email=$2 LIMIT 1',[auth.user?.id, normalized])
+      const result=await Promise.race([profileLookup,new Promise((_, reject)=>setTimeout(()=>reject(new Error('profile lookup timeout')),1200))])
       row=result.rows[0]
     } catch (profileError) {
       console.error('[v0] Login profile lookup failed:', profileError.message)

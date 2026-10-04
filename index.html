@@ -585,7 +585,7 @@ async function tpAuthFetch(path,opts={}){
   const url=tpAuthBase()+(String(path).startsWith('/')?'':'/')+String(path);
   const headers=tpAuthHeaders(opts.headers);
   let r;
-  const controller=new AbortController(), timeout=setTimeout(()=>controller.abort(),15000);
+  const controller=new AbortController(), timeout=setTimeout(()=>controller.abort(),8000);
   try{r=await fetch(url,{credentials:'include',...opts,headers,signal:controller.signal});}catch(e){throw new Error(e?.name==='AbortError'?'Authentication timed out. Please try again.':'Unable to reach TradersProp authentication server.')}finally{clearTimeout(timeout)}
   let data=null;try{data=await r.json()}catch{}
   if(!r.ok)throw new Error(data?.message||data?.error||('Authentication server returned HTTP '+r.status));
