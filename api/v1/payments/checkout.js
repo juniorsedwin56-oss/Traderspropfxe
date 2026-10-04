@@ -12,8 +12,7 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ message: 'A valid productType, amount, and customer email are required.' })
     }
 
-    await ensureSchema()
-    const trackingId = randomUUID()
+  const trackingId = randomUUID()
     const merchantReference = `TP-${Date.now()}-${trackingId.slice(0, 8)}`
     const configuredOrigin = process.env.PESAPAL_NOTIFICATION_URL
       ? new URL(process.env.PESAPAL_NOTIFICATION_URL).origin
@@ -28,14 +27,20 @@ module.exports = async function handler(req, res) {
       email,
     })
     const finalTrackingId = order.order_tracking_id || trackingId
+  try {
+    await ensureSchema()
     await getPool().query(
-      `INSERT INTO tp_payments (tracking_id, merchant_reference, client_email, product_type, amount, currency, status, metadata)
-       VALUES ($1,$2,$3,$4,$5,$6,'PENDING',$7)`,
-      [finalTrackingId, merchantReference, email, productType, numericAmount, currency || 'USD', JSON.stringify(metadata || {})]
+    `INSERT INTO tp_payments (tracking_id, merchant_reference, client_email, product_type, amount, currency, status, metadata)
+    VALUES ($1,$2,$3,$4,$5,$6,'PENDING',$7)`,
+    [finalTrackingId, merchantReference, email, productType, numericAmount, currency || 'USD', JSON.stringify(metadata || {})]
     )
-    return res.status(200).json({ redirectUrl: order.redirect_url, trackingId: finalTrackingId, merchantReference })
+  } catch (recordError) {
+    console.error('[v0] PesaPal payment record failed after checkout was created:', recordError.message)
+  }
+  return res.status(200).json({ redirectUrl: order.redirect_url, trackingId: finalTrackingId, merchantReference })
   } catch (error) {
-    console.error('[v0] pesapal checkout error:', error)
-    return res.status(error.statusCode || 500).json({ message: error.message || 'Unable to start PesaPal checkout.' })
+  console.error('[v0] pesapal checkout error:', error)
+  const status = error.statusCode || 500
+  return res.status(status).json({ message: error.message || 'Unable to start PesaPal checkout.', code: status === 502 ? 'PESAPAL_CONFIGURATION_ERROR' : 'PESAPAL_CHECKOUT_ERROR' })
   }
 }

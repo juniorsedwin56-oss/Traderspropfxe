@@ -68,7 +68,7 @@ async function submitOrder({ id, currency, amount, description, callbackUrl, not
   if (!res.ok || data?.error) {
     const upstreamMessage = typeof data?.error === 'string' ? data.error : data?.error?.message
     const message = upstreamMessage || data?.message || data?.error_description
-    const error = new Error(message || `PesaPal rejected the order (HTTP ${res.status}).`)
+    const error = new Error(message || `PesaPal rejected the order (HTTP ${res.status}). Check the notification ID and callback URL configuration.`)
     error.statusCode = res.status >= 400 && res.status < 500 ? 502 : 503
     throw error
   }
