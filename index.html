@@ -584,7 +584,8 @@ async function tpAuthFetch(path,opts={}){
   const url=tpAuthBase()+(String(path).startsWith('/')?'':'/')+String(path);
   const headers=tpAuthHeaders(opts.headers);
   let r;
-  try{r=await fetch(url,{credentials:'include',...opts,headers});}catch(e){throw new Error('Unable to reach TradersProp authentication server.')}
+  const controller=new AbortController(), timeout=setTimeout(()=>controller.abort(),15000);
+  try{r=await fetch(url,{credentials:'include',...opts,headers,signal:controller.signal});}catch(e){throw new Error(e?.name==='AbortError'?'Authentication timed out. Please try again.':'Unable to reach TradersProp authentication server.')}finally{clearTimeout(timeout)}
   let data=null;try{data=await r.json()}catch{}
   if(!r.ok)throw new Error(data?.message||data?.error||('Authentication server returned HTTP '+r.status));
   return data;
@@ -1032,8 +1033,8 @@ async function submitAuth(e,mode){
     const msg=String(err?.message||'');
     if(/already exists/i.test(msg))m.textContent='An account with this email already exists. Please log in instead.';
     else if(/invalid email|valid email/i.test(msg))m.textContent='Enter a valid email address.';
-    else if(/incorrect|invalid password|credentials/i.test(msg))m.textContent='Incorrect email or password.';
-    else m.textContent=msg||'Unable to authenticate right now. Please try again.';
+  else if(/incorrect|invalid password|credentials|invalid login/i.test(msg))m.textContent='Incorrect email or password.';
+  else m.textContent=msg||'Unable to authenticate right now. Please try again.';
   }finally{if(tpAuthSubmitting)reset()}
 }
 async function verifyPhonePage(){let u=user();if(!u)return go('login');const phone=localStorage.getItem('tp_otp_phone')||u.phone||'';document.title='TradersProp — Verify Phone';$('#app').innerHTML=header()+`<div class="authWrap"><div class="otpCard"><div class="kicker">PHONE VERIFICATION</div><h1>Verify your phone</h1><p class="muted">We are verifying <b>${esc(phone)}</b>. A 6-digit code will be sent by SMS.</p><button id="sendSignupOtp" class="btn primary full" onclick="sendSignupOtp()">Send verification code</button><div class="field"><label for="signupOtp">Verification code</label><input id="signupOtp" class="otpInput otpDigits" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="••••••" disabled></div><div class="otpActions"><button id="verifySignupOtpBtn" class="btn primary" onclick="verifySignupOtp()" disabled>Verify Phone</button><button id="resendSignupOtp" class="btn" onclick="sendSignupOtp()" disabled>Resend OTP</button></div><p id="otpMsg" class="muted" style="margin-top:14px"></p><button class="btn full" onclick="go('signup')" style="margin-top:8px">Change details</button></div></div>`;await sendSignupOtp()}
