@@ -1052,7 +1052,7 @@ function clearPromoCode(){localStorage.removeItem('tp_promo_code');const i=$('#p
 function tpRefreshInstantPromo(){const id=localStorage.getItem('tp_checkout_plan');const p=instantFundedPlans?.find(x=>String(x.id)===String(id));if(!p)return;const due=tpDiscountedAmount(p.fee),saveAmt=p.fee-due;const a=$('#instantAmountDue'),d=$('#instantDiscount'),h=$('#instantHeadlinePrice'),b=$('#instantPayButton');if(a)a.textContent=money(due);if(d)d.textContent='-'+money(saveAmt);if(h)h.textContent=money(due);if(b)b.textContent=`Pay ${money(due)} & Activate Account →`; }
 function promoCheckoutFields(){const active=tpPromoDiscount()>0;return `<div class="panel" style="margin:18px 0;padding:16px"><b>Special Offer</b><p class="muted" style="margin:6px 0 12px">Use code <b>${TP_PROMO_CODE}</b> to receive 25% OFF.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><input id="promoCodeInput" value="${active?TP_PROMO_CODE:''}" placeholder="Enter offer code" style="flex:1;min-width:180px;padding:12px;border:1px solid #dce4da;border-radius:9px;text-transform:uppercase"><button class="btn primary" type="button" onclick="applyPromoCode()">Apply</button>${active?'<button class="btn" type="button" onclick="clearPromoCode()">Remove</button>':''}</div><p id="promoMsg" class="muted" style="margin:10px 0 0;color:${active?'#168b38':'inherit'}">${active?'Offer applied! 25% discount will be reflected below.':'Enter the code to unlock the offer.'}</p></div>`}
 
-function buy(id,type){type=type||activeChallengeType||'1-phase';if(!challengeTypes[type])type='1-phase';localStorage.setItem('tp_challenge_type',type);localStorage.setItem('tp_selected_challenge',String(id));go('deposit')}
+  function buy(id,type){type=type||activeChallengeType||'1-phase';if(!challengeTypes[type])type='1-phase';localStorage.removeItem('tp_nest_offer');localStorage.setItem('tp_challenge_type',type);localStorage.setItem('tp_selected_challenge',String(id));go('deposit')}
 async function startPesapalCheckout({productType,amount,currency='USD',description,metadata={}}){
   const msg=$('#depositMsg')||$('#checkoutMsg')||$('#competitionCheckoutMsg');
   const btn=$('#pesapalPayButton')||$('#instantPesapalButton')||$('#competitionPesapalButton');
@@ -1183,13 +1183,13 @@ function deposit(){
       <div class="tpAmountPanel">
         <div class="tpAmountIcon">$</div>
         <div class="tpAmountLabel"><b>Amount to pay</b><span>TradersProp challenge</span></div>
-        <strong id="depositAmountTop">${money(tpDiscountedAmount(p.fee))}</strong>
+        <strong id="depositAmountTop">${money(nestOffer?p.fee:p.fee)}</strong>
       </div>
       ${loggedIn?'':guestAccountFieldsHTML()}
       <div class="tpPlanPanel">
         <div class="tpPlanTitle"><span>${nestOffer==='NEST_7_2500'?'NEST Challenge':'Challenge'}</span><small>${nestOffer==='NEST_BOGO'?'Choose the paid challenge':'Offer account'}</small></div>
         ${nestOffer==='NEST_7_2500'?`<div class="tpNestFixedPlan"><b>$2,500 NEST Challenge</b><span>$7 entry · pay now</span></div>`:`<select id="depositPlan" onchange="refreshPesapalChallengeAmount()">${buildChallengePlans(localStorage.getItem('tp_challenge_type')||'1-phase').map(x=>`<option value="${x.id}" ${Number(x.id)===Number(p.id)?'selected':''}>${money(x.size)} ${challengeTypes[x.type].short} — ${money(x.fee)}</option>`).join('')}</select>`}
-        <div class="tpDepositLine"><span>Challenge fee</span><strong id="depositAmount">${money(tpDiscountedAmount(p.fee))}</strong></div>
+        <div class="tpDepositLine"><span>Challenge fee</span><strong id="depositAmount">${money(p.fee)}</strong></div>
         <div class="fee" id="promoSavingsRow" style="display:${tpPromoDiscount()>0?'flex':'none'}"><span>Offer savings (TRADERSPROP25)</span><b id="promoSavings">-${money(p.fee-tpDiscountedAmount(p.fee))}</b></div>${promoCheckoutFields()}
       </div>
       <div class="tpPesapalPanel">
@@ -1211,7 +1211,7 @@ function refreshPesapalChallengeAmount(){
   const id=Number($('#depositPlan')?.value||0);
   const p=nestOffer==='NEST_7_2500'?{id:2500,size:2500,fee:7,type:'nest'}:buildChallengePlans(localStorage.getItem('tp_challenge_type')||'1-phase').find(x=>Number(x.id)===id);
   if(!p)return; localStorage.setItem('tp_selected_challenge',String(id));
-  const discounted=tpDiscountedAmount(p.fee); if($('#depositAmount'))$('#depositAmount').textContent=money(discounted); if($('#depositAmountTop'))$('#depositAmountTop').textContent=money(discounted);
+  const discounted=p.fee; if($('#depositAmount'))$('#depositAmount').textContent=money(discounted); if($('#depositAmountTop'))$('#depositAmountTop').textContent=money(discounted);
   if($('#promoSavingsRow'))$('#promoSavingsRow').style.display=tpPromoDiscount()>0?'flex':'none';
   if($('#promoSavings'))$('#promoSavings').textContent='-'+money(p.fee-discounted);
 }
@@ -1222,9 +1222,9 @@ async function startPesapalChallengeCheckout(){
   if(!p){$('#depositMsg').textContent='Please select a challenge first.';return;}
   const email=guestPaymentEmail($('#depositMsg'));
   if(!email)return;
-  const amount=nestOffer==='NEST_7_2500'?7:tpDiscountedAmount(p.fee);
+  const amount=nestOffer==='NEST_7_2500'?7:p.fee;
   const description=nestOffer==='NEST_7_2500'?'TradersProp NEST $2,500 Pay Later Challenge':nestOffer==='NEST_BOGO'?`TradersProp NEST Buy One Get One Free — ${p.size} ${challengeTypes[p.type].label}`:`TradersProp ${challengeTypes[p.type].label} ${p.size} challenge`;
-  await startPesapalCheckout({productType:'challenge',amount,currency:'USD',description,metadata:{challengeId:p.id,challengeType:p.type,accountSize:p.size,originalAmount:p.fee,promoCode:tpPromoCode()||null,customerEmail:email,offerCode:nestOffer||null,offerName:nestOffer?'NEST':null}});
+  await startPesapalCheckout({productType:'challenge',amount,currency:'USD',description,metadata:{challengeId:p.id,challengeType:p.type,accountSize:p.size,originalAmount:p.fee,promoCode:null,customerEmail:email,offerCode:nestOffer||null,offerName:nestOffer?'NEST':null}});
 }
 let mpesaConfig=null,mpesaStatusTimer=null,mpesaActiveRequestId='';
 function mpesaPhoneTo254(value){

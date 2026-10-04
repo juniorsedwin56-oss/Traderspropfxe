@@ -8,6 +8,13 @@ module.exports = async function handler(req, res) {
     const { productType, amount, currency, description, metadata, customerEmail } = req.body || {}
     const email = String(customerEmail || metadata?.customerEmail || '').trim().toLowerCase()
     const numericAmount = Number(amount)
+    const meta = metadata && typeof metadata === 'object' ? metadata : {}
+    if (productType === 'challenge' && !meta.offerCode) {
+      const baseFees = { '5000': 29, '10000': 69, '25000': 169, '50000': 279, '100000': 529 }
+      const multiplier = { '1-phase': 1, '2-phase': 0.9, '3-phase': 0.8 }[String(meta.challengeType)] || 1
+      const expectedAmount = Math.round((baseFees[String(meta.accountSize)] || 0) * multiplier)
+      if (!expectedAmount || numericAmount !== expectedAmount) return res.status(400).json({ message: 'The challenge price is invalid. Please return to Challenges and select the account again.' })
+    }
     if (!productType || !Number.isFinite(numericAmount) || numericAmount <= 0 || !/^\S+@\S+\.\S+$/.test(email)) {
       return res.status(400).json({ message: 'A valid productType, amount, and customer email are required.' })
     }
