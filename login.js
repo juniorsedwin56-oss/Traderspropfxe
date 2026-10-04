@@ -1,5 +1,6 @@
 const { handlePreflight, applyCors } = require('./cors')
-const { ensureSchema, getPool, createSession, verifyPassword, publicUser } = require('./auth')
+const { ensureSchema, getPool, publicUser } = require('./auth')
+const { signIn } = require('./supabase-auth')
 module.exports = async function handler(req,res){
   if (handlePreflight(req,res)) return
   applyCors(req,res)
@@ -7,10 +8,10 @@ module.exports = async function handler(req,res){
   try{
     const {email,password}=req.body||{},normalized=String(email||'').trim().toLowerCase()
     await ensureSchema()
+    const auth = await signIn(normalized, password || '')
     const result=await getPool().query('SELECT * FROM tp_users WHERE email=$1 LIMIT 1',[normalized])
     const row=result.rows[0]
-    if(!row||!await verifyPassword(password||'',row.password_salt,row.password_hash))return res.status(401).json({message:'Incorrect email or password.'})
-    const token=await createSession(row.id)
-    res.status(200).json({token,user:publicUser(row)})
-  }catch(e){console.error('[auth/login]',e);const code=/POSTGRES_URL|database|connection|connect/i.test(String(e?.message||''))?503:500;res.status(code).json({message:code===503?'Authentication database is temporarily unavailable. Please try again shortly.':'Unable to sign in right now.'})}
+    if(!row)return res.status(404).json({message:'Your account profile is not available yet.'})
+    res.status(200).json({token: auth.access_token, user:publicUser(row), refreshToken: auth.refresh_token, expiresIn: auth.expires_in})
+  }catch(e){console.error('[auth/login]',e);const code=Number(e?.statusCode)||(/POSTGRES_URL|database|connection|connect/i.test(String(e?.message||''))?503:500);res.status(code).json({message:e?.message||'Unable to sign in right now.'})}
 }
