@@ -1,6 +1,6 @@
 const { randomUUID } = require('crypto')
-const { ensureSchema, getPool } = require('../../../../db')
-const pesapal = require('../../../../pesapal')
+const { ensureSchema, getPool } = require('../../../db')
+const pesapal = require('../../../pesapal')
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed.' })
