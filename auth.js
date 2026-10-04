@@ -1,5 +1,6 @@
 const crypto = require('crypto')
 const { ensureSchema, getPool } = require('./db')
+const { getUser: getSupabaseUser } = require('./supabase-auth')
 
 const SESSION_DAYS = 30
 
@@ -66,6 +67,18 @@ async function requireAuthenticatedUser(req) {
     const err = new Error('Missing authentication token.')
     err.statusCode = 401
     throw err
+  }
+  if (token.split('.').length === 3) {
+    try {
+      const supabaseUser = await getSupabaseUser(token)
+      await ensureSchema()
+      const profile = await getPool().query('SELECT * FROM tp_users WHERE id=$1 OR email=$2 LIMIT 1', [supabaseUser.id, supabaseUser.email])
+      if (profile.rows[0]) return profile.rows[0]
+    } catch (error) {
+      const err = new Error('Invalid or expired session.')
+      err.statusCode = 401
+      throw err
+    }
   }
   await ensureSchema()
   const result = await getPool().query(
