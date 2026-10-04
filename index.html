@@ -48,7 +48,7 @@
 
 /* Offers page */
 .tpNestFixedPlan{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:13px 14px;border:1px solid #dfe9dc;border-radius:11px;background:#f8fbf7}.tpNestFixedPlan span{font-size:12px;color:#68726c}
-.tpOffersPage{padding:38px 0 55px;background:linear-gradient(180deg,#fff 0%,#fbfdfb 55%,#fff 100%);min-height:calc(100vh - 140px)}
+.tpOffersPage{padding:38px 0 55px;background:radial-gradient(circle at 90% 0,rgba(118,255,0,.12),transparent 28%),linear-gradient(180deg,#050809 0%,#0a1110 55%,#050809 100%);min-height:calc(100vh - 140px);color:#f3f7f3}
 .tpOffersWrap{width:min(1040px,92%);margin:0 auto}
 .tpOffersHero{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:24px}
 .tpOffersKicker{display:inline-flex;align-items:center;gap:7px;color:#48b92a;font-size:11px;font-weight:900;letter-spacing:1.5px}
@@ -83,7 +83,7 @@
 }
 
 /* KYC v2 — reference layout */
-.kycPage{padding:38px 0 28px;background:linear-gradient(180deg,#fff 0%,#fbfdfb 55%,#fff 100%);min-height:calc(100vh - 140px)}
+.kycPage{padding:38px 0 28px;background:radial-gradient(circle at 88% 0,rgba(118,255,0,.11),transparent 28%),linear-gradient(180deg,#050809 0%,#0a1110 55%,#050809 100%);min-height:calc(100vh - 140px);color:#f3f7f3}
 .kycContainer{width:min(760px,92%);margin:0 auto}
 .kycTitleRow{display:flex;align-items:flex-start;gap:14px;margin-bottom:20px}
 .kycShield{width:48px;height:48px;border-radius:14px;background:#f0faed;color:#42bb27;display:grid;place-items:center;font-size:25px;flex:0 0 48px;border:1px solid #e3f1df}
@@ -508,6 +508,15 @@ body{background:linear-gradient(180deg,#fff 0%,#f7f8f9 48%,#fff 100%);color:var(
   .kycInput,.kycSelect,.kycPhoneCountry,.kycPrefix,.kycDocType{background:#0b1510;color:#edf7ed;border-color:rgba(166,207,169,.25)}
   .kycInput::placeholder{color:#718174}.kycDocType.active{background:rgba(124,255,43,.08);border-color:#62cf50}.kycUpload{background:rgba(124,255,43,.05);border-color:rgba(124,255,43,.4)}
   @media(max-width:700px){.tpOffersPage,.kycPage{padding-top:24px}.tpOffersHero h1,.kycTitleRow h1{font-size:30px}.tpOfferCard,.kycCard{border-radius:20px}}
+  .tpOffersPage .tpOffersHero h1,.tpOffersPage .tpOfferCard h2,.kycPage .kycTitleRow h1,.kycPage .kycCardHead h2,.kycPage .kycStatusMain{color:#f4f8f4}
+  .tpOffersPage .tpOffersHero p,.tpOffersPage .tpOfferDesc,.kycPage .kycTitleRow p,.kycPage .kycStatusText,.kycPage .kycDocIntro{color:#aab9ae}
+  .tpOffersPage .tpOfferCard,.kycPage .kycCard{background:linear-gradient(145deg,#131b1a,#0a1010);border-color:#2d3a38;box-shadow:0 18px 45px rgba(0,0,0,.28)}
+  .tpOffersPage .tpOfferIcon,.kycPage .kycShield{background:linear-gradient(145deg,#172817,#0d1410);border-color:#477c2a;color:#8cff42;box-shadow:0 0 22px rgba(118,255,0,.1)}
+  .tpOffersPage .tpOfferTag{background:rgba(118,255,0,.12);color:#9cff61}.tpOffersPage .tpOfferPrice span,.tpOffersPage .tpOfferList li{color:#b8c5ba}.tpOffersPage .tpOfferList{border-color:#293533}.tpOffersPage .tpOfferList li{border-color:#293533}
+  .kycPage .kycStatus{background:linear-gradient(145deg,#111c15,#0b1310);border-color:#304333}.kycPage .kycStatusCol+.kycStatusCol{border-color:#304333}.kycPage .kycStatusLabel,.kycPage .kycField label,.kycPage .kycDocName{color:#dfe9e0}
+  .kycPage .kycInput,.kycPage .kycSelect,.kycPage .kycPhoneCountry,.kycPage .kycPrefix,.kycPage .kycDocType{background:#0b1211;color:#edf5ee;border-color:#34423e}.kycPage .kycDocType.active{background:rgba(118,255,0,.08);border-color:#72c94a}
+  .tpv2VerticalNav{display:flex;flex-direction:column;gap:10px}.tpv2VerticalNav button{min-height:66px!important;border-radius:18px!important;padding:10px 14px!important}.tpv2VerticalNav button span:nth-child(2){flex:1;text-align:left}.tpv2VerticalNav button i{font-size:28px;font-style:normal;color:#aeb8b4}.tpv2MenuDivider{margin:18px 0 12px!important}.tpv2LogoutWide{min-height:62px!important;border-radius:18px!important}
+  @media(max-width:720px){.tpv2VerticalNav{gap:9px}.tpv2VerticalNav button{min-height:62px!important}.tpOffersPage,.kycPage{padding-top:24px}.tpOffersHero h1,.kycTitleRow h1{font-size:30px}}
   </style>
   </head>
 <body>
@@ -1614,8 +1623,8 @@ async function dashboard(){
           <button onclick="dashboardMenuAction(()=>go('offers'))"><span class="tpv2Icon">✦</span><span>Offers</span><i>›</i></button>
           <button onclick="dashboardMenuAction(()=>competition())"><span class="tpv2Icon">🏆</span><span>Competition</span><i>›</i></button>
           <button onclick="dashboardMenuAction(()=>go('affiliate'))"><span class="tpv2Icon">♧</span><span>Affiliate Programs</span><i>›</i></button>
-          <button onclick="dashboardMenuAction(()=>go('kyc'))"><span class="tpv2Icon">♢</span>
-    <button class="navItem" onclick="learnerTutorial()" title="Learner's Tutorial"><span class="navIcon">🎓</span><span>Learner's Tutorial</span></button><span>KYC Verification</span><i>›</i></button>
+          <button onclick="dashboardMenuAction(()=>go('kyc'))"><span class="tpv2Icon">♢</span><span>KYC Verification</span><i>›</i></button>
+          <button onclick="dashboardMenuAction(()=>learnerTutorial())"><span class="tpv2Icon">🎓</span><span>Learner&apos;s Tutorial</span><i>›</i></button>
           <button onclick="dashboardMenuAction(()=>payout())"><span class="tpv2Icon">▣</span><span>Payout</span><i>›</i></button>
           <button onclick="dashboardMenuAction(()=>go('help-center'))"><span class="tpv2Icon">?</span><span>Help Center</span><i>›</i></button>
         </nav>
