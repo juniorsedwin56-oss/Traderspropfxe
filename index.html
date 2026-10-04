@@ -517,6 +517,7 @@ body{background:linear-gradient(180deg,#fff 0%,#f7f8f9 48%,#fff 100%);color:var(
   .kycPage .kycInput,.kycPage .kycSelect,.kycPage .kycPhoneCountry,.kycPage .kycPrefix,.kycPage .kycDocType{background:#0b1211;color:#edf5ee;border-color:#34423e}.kycPage .kycDocType.active{background:rgba(118,255,0,.08);border-color:#72c94a}
   .tpv2VerticalNav{display:flex;flex-direction:column;gap:10px}.tpv2VerticalNav button{min-height:66px!important;border-radius:18px!important;padding:10px 14px!important}.tpv2VerticalNav button span:nth-child(2){flex:1;text-align:left}.tpv2VerticalNav button i{font-size:28px;font-style:normal;color:#aeb8b4}.tpv2MenuDivider{margin:18px 0 12px!important}.tpv2LogoutWide{min-height:62px!important;border-radius:18px!important}
   @media(max-width:720px){.tpv2VerticalNav{gap:9px}.tpv2VerticalNav button{min-height:62px!important}.tpOffersPage,.kycPage{padding-top:24px}.tpOffersHero h1,.kycTitleRow h1{font-size:30px}}
+  .tpOffersPage,.kycPage{background:#050807!important;color:#eef7ef!important}.tpOfferCard,.kycCard{background:linear-gradient(145deg,#142019,#0b1110)!important;border-color:#35493a!important;color:#eef7ef!important}.tpOffersHero h1,.tpOfferCard h2,.kycTitleRow h1,.kycCardHead h2,.kycStatusMain{color:#f3fff3!important}.tpOffersHero p,.tpOfferDesc,.kycTitleRow p,.kycStatusText{color:#a9baad!important}.kycStatus{background:#101c14!important;border-color:#38533c!important}.kycInput,.kycSelect,.kycPhoneCountry,.kycPrefix,.kycDocType{background:#0b1210!important;color:#effbef!important;border-color:#3d5241!important}
   </style>
   </head>
 <body>
@@ -1492,18 +1493,18 @@ async function dashboard(){
     .tpv2.menu-open .tpv2Side{transform:translateX(0);opacity:1;pointer-events:auto}
     .tpv2Backdrop{position:fixed;inset:0;background:rgba(0,0,0,.62);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:100}
     .tpv2.menu-open .tpv2Backdrop{opacity:1;pointer-events:auto}
-    .tpv2Side{z-index:101!important}
+    .tpv2Side{z-index:101!important;background:linear-gradient(180deg,#121918 0%,#070b0a 100%)!important;border-color:#3b513e!important;box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 45px rgba(116,255,0,.09)!important}
     .tpv2MenuHeader{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:4px 4px 20px}
     .tpv2MenuHeader>div{display:grid;gap:4px}.tpv2MenuEyebrow{font-size:10px;letter-spacing:.18em;color:var(--lime);font-weight:950}.tpv2MenuHeader b{font-size:24px;letter-spacing:-.6px}
     .tpv2MenuClose{width:52px;height:52px;border-radius:50%;border:1px solid #477b2d;background:radial-gradient(circle at 35% 35%,#1c2718,#0c0e0d);color:#f2f2f2;font-size:34px;line-height:1;cursor:pointer;box-shadow:0 0 24px rgba(116,255,0,.11)}
-    .tpv2VerticalNav{display:flex!important;flex-direction:column!important;gap:12px!important}
+    .tpv2VerticalNav{display:flex!important;flex-direction:column!important;gap:16px!important}.tpv2NavGroup{display:flex;flex-direction:column;gap:10px}.tpv2NavLabel{padding:0 6px 2px;color:#8fa397;font-size:10px;font-weight:900;letter-spacing:.16em;text-transform:uppercase}.tpv2NavGroup+.tpv2NavGroup{padding-top:4px;border-top:1px solid rgba(102,145,82,.2)}
     .tpv2VerticalNav button,.tpv2LogoutWide{width:100%;min-height:74px!important;border:1px solid #292f31!important;border-radius:20px!important;background:linear-gradient(135deg,#171a1b,#0f1112)!important;color:#f1f3f1!important;padding:12px 18px!important;display:grid!important;grid-template-columns:54px minmax(0,1fr) 24px!important;align-items:center!important;gap:14px!important;text-align:left!important;cursor:pointer;transition:transform .18s ease,border-color .18s ease,background .18s ease!important}
     .tpv2VerticalNav button:hover,.tpv2LogoutWide:hover{transform:translateY(-2px);border-color:#5e9b38!important;background:linear-gradient(135deg,#1b2417,#121612)!important}
     .tpv2VerticalNav .tpv2Icon,.tpv2LogoutWide .tpv2Icon{width:48px!important;height:48px!important;border-radius:16px!important;display:grid!important;place-items:center!important;background:linear-gradient(145deg,#18260f,#0e160b)!important;border:1px solid #355b22!important;color:var(--lime)!important;font-size:24px!important;margin:0!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
     .tpv2VerticalNav button span:nth-child(2),.tpv2LogoutWide span:nth-child(2){font-size:17px!important;font-weight:850!important;line-height:1.15}.tpv2VerticalNav button i,.tpv2LogoutWide i{font-style:normal;color:#aab0ad;font-size:31px;font-weight:300;text-align:right}
     .tpv2MenuDivider{height:1px;background:linear-gradient(90deg,transparent,#3d542e 18%,#3d542e 82%,transparent);margin:20px 4px}
     .tpv2LogoutWide{min-height:78px!important;border-color:#5d2b2b!important;background:linear-gradient(135deg,#211313,#130e0e)!important;color:#ff8d8d!important}.tpv2LogoutWide .tpv2Icon{color:#ff5a5a!important;background:linear-gradient(145deg,#2b1414,#180c0c)!important;border-color:#6d3131!important}.tpv2LogoutWide:hover{border-color:#c13c3c!important;background:linear-gradient(135deg,#2a1515,#160d0d)!important}
-    @media(max-width:720px){.tpv2Side{top:82px!important;right:8px!important;bottom:10px!important;width:calc(100vw - 16px)!important;padding:16px!important;border-radius:24px!important}.tpv2MenuHeader{padding-bottom:16px}.tpv2MenuHeader b{font-size:22px}.tpv2VerticalNav{gap:9px!important}.tpv2VerticalNav button,.tpv2LogoutWide{min-height:68px!important;border-radius:18px!important;padding:10px 14px!important;grid-template-columns:48px minmax(0,1fr) 22px!important;gap:12px!important}.tpv2VerticalNav .tpv2Icon,.tpv2LogoutWide .tpv2Icon{width:44px!important;height:44px!important;border-radius:14px!important;font-size:22px!important}.tpv2VerticalNav button span:nth-child(2),.tpv2LogoutWide span:nth-child(2){font-size:16px!important}.tpv2MenuClose{width:46px;height:46px;font-size:30px}.tpv2MenuDivider{margin:14px 2px}}
+    @media(max-width:720px){.tpv2Side{top:82px!important;right:8px!important;bottom:10px!important;width:calc(100vw - 16px)!important;padding:16px!important;border-radius:24px!important}.tpv2MenuHeader{padding-bottom:16px}.tpv2MenuHeader b{font-size:22px}.tpv2VerticalNav{gap:12px!important}.tpv2NavGroup{gap:8px}.tpv2NavLabel{font-size:9px}.tpv2VerticalNav button,.tpv2LogoutWide{min-height:68px!important;border-radius:18px!important;padding:10px 14px!important;grid-template-columns:48px minmax(0,1fr) 22px!important;gap:12px!important}.tpv2VerticalNav .tpv2Icon,.tpv2LogoutWide .tpv2Icon{width:44px!important;height:44px!important;border-radius:14px!important;font-size:22px!important}.tpv2VerticalNav button span:nth-child(2),.tpv2LogoutWide span:nth-child(2){font-size:16px!important}.tpv2MenuClose{width:46px;height:46px;font-size:30px}.tpv2MenuDivider{margin:14px 2px}}
 
 
     /* Green-night client dashboard redesign — matched to the supplied reference */
@@ -1618,16 +1619,22 @@ async function dashboard(){
           <button class="tpv2MenuClose" aria-label="Close navigation" onclick="toggleDashboardMenu(false)">×</button>
         </div>
         <nav class="tpv2Nav tpv2VerticalNav" aria-label="Client navigation">
-          <button onclick="dashboardMenuAction(()=>profile())"><span class="tpv2Icon">♙</span><span>Profile</span><i>›</i></button>
-          <button onclick="dashboardMenuAction(()=>go('pricing'))"><span class="tpv2Icon">♔</span><span>Challenges</span><i>›</i></button>
-          <button onclick="dashboardMenuAction(()=>go('market'))"><span class="tpv2Icon">▥</span><span>Trade Platform</span><i>›</i></button>
-          <button onclick="dashboardMenuAction(()=>go('offers'))"><span class="tpv2Icon">✦</span><span>Offers</span><i>›</i></button>
-          <button onclick="dashboardMenuAction(()=>competition())"><span class="tpv2Icon">🏆</span><span>Competition</span><i>›</i></button>
-          <button onclick="dashboardMenuAction(()=>go('affiliate'))"><span class="tpv2Icon">♧</span><span>Affiliate Programs</span><i>›</i></button>
-          <button onclick="dashboardMenuAction(()=>go('kyc'))"><span class="tpv2Icon">♢</span><span>KYC Verification</span><i>›</i></button>
-          <button onclick="dashboardMenuAction(()=>learnerTutorial())"><span class="tpv2Icon">🎓</span><span>Learner&apos;s Tutorial</span><i>›</i></button>
-          <button onclick="dashboardMenuAction(()=>payout())"><span class="tpv2Icon">▣</span><span>Payout</span><i>›</i></button>
-          <button onclick="dashboardMenuAction(()=>go('help-center'))"><span class="tpv2Icon">?</span><span>Help Center</span><i>›</i></button>
+          <div class="tpv2NavGroup"><span class="tpv2NavLabel">Workspace</span>
+            <button onclick="dashboardMenuAction(()=>profile())"><span class="tpv2Icon">♙</span><span>Profile</span><i>›</i></button>
+            <button onclick="dashboardMenuAction(()=>go('market'))"><span class="tpv2Icon">▥</span><span>Trade Platform</span><i>›</i></button>
+            <button onclick="dashboardMenuAction(()=>go('pricing'))"><span class="tpv2Icon">♔</span><span>Challenges</span><i>›</i></button>
+          </div>
+          <div class="tpv2NavGroup"><span class="tpv2NavLabel">Grow with TradersProp</span>
+            <button onclick="dashboardMenuAction(()=>go('offers'))"><span class="tpv2Icon">✦</span><span>Offers</span><i>›</i></button>
+            <button onclick="dashboardMenuAction(()=>competition())"><span class="tpv2Icon">🏆</span><span>Competition</span><i>›</i></button>
+            <button onclick="dashboardMenuAction(()=>go('affiliate'))"><span class="tpv2Icon">♧</span><span>Affiliate Programs</span><i>›</i></button>
+            <button onclick="dashboardMenuAction(()=>learnerTutorial())"><span class="tpv2Icon">🎓</span><span>Learner&apos;s Tutorial</span><i>›</i></button>
+          </div>
+          <div class="tpv2NavGroup"><span class="tpv2NavLabel">Account &amp; Support</span>
+            <button onclick="dashboardMenuAction(()=>go('kyc'))"><span class="tpv2Icon">♢</span><span>KYC Verification</span><i>›</i></button>
+            <button onclick="dashboardMenuAction(()=>payout())"><span class="tpv2Icon">▣</span><span>Payout</span><i>›</i></button>
+            <button onclick="dashboardMenuAction(()=>go('help-center'))"><span class="tpv2Icon">?</span><span>Help Center</span><i>›</i></button>
+          </div>
         </nav>
         <div class="tpv2MenuDivider"></div>
         <button class="tpv2Logout tpv2LogoutWide" onclick="dashboardMenuAction(()=>logout())"><span class="tpv2Icon">⇥</span><span>Log Out</span><i>›</i></button>
