@@ -27,16 +27,18 @@ module.exports = async function handler(req, res) {
       email,
     })
     const finalTrackingId = order.order_tracking_id || trackingId
-  try {
-    await ensureSchema()
-    await getPool().query(
-    `INSERT INTO tp_payments (tracking_id, merchant_reference, client_email, product_type, amount, currency, status, metadata)
-    VALUES ($1,$2,$3,$4,$5,$6,'PENDING',$7)`,
-    [finalTrackingId, merchantReference, email, productType, numericAmount, currency || 'USD', JSON.stringify(metadata || {})]
-    )
-  } catch (recordError) {
-    console.error('[v0] PesaPal payment record failed after checkout was created:', recordError.message)
-  }
+  setImmediate(async () => {
+    try {
+      await ensureSchema()
+      await getPool().query(
+      `INSERT INTO tp_payments (tracking_id, merchant_reference, client_email, product_type, amount, currency, status, metadata)
+      VALUES ($1,$2,$3,$4,$5,$6,'PENDING',$7)`,
+      [finalTrackingId, merchantReference, email, productType, numericAmount, currency || 'USD', JSON.stringify(metadata || {})]
+      )
+    } catch (recordError) {
+      console.error('[v0] PesaPal payment record failed after checkout was created:', recordError.message)
+    }
+  })
   return res.status(200).json({ redirectUrl: order.redirect_url, trackingId: finalTrackingId, merchantReference })
   } catch (error) {
   console.error('[v0] pesapal checkout error:', error)
