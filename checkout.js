@@ -1,6 +1,6 @@
 const { randomUUID } = require('crypto')
-const { ensureSchema, getPool } = require('../../../_lib/db')
-const pesapal = require('../../../_lib/pesapal')
+const { ensureSchema, getPool } = require('./db')
+const pesapal = require('./pesapal')
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
