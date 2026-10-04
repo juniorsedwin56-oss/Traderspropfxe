@@ -66,7 +66,16 @@ async function submitOrder({ id, currency, amount, description, callbackUrl, not
   })
   const data = await res.json().catch(() => ({}))
   if (!res.ok || data?.error) {
-    throw new Error(data?.error?.message || data?.message || 'PesaPal did not accept the order.')
+    const upstreamMessage = typeof data?.error === 'string' ? data.error : data?.error?.message
+    const message = upstreamMessage || data?.message || data?.error_description
+    const error = new Error(message || `PesaPal rejected the order (HTTP ${res.status}).`)
+    error.statusCode = res.status >= 400 && res.status < 500 ? 502 : 503
+    throw error
+  }
+  if (!data?.redirect_url && !data?.redirectUrl) {
+    const error = new Error('PesaPal accepted the request but did not return a checkout URL.')
+    error.statusCode = 502
+    throw error
   }
   return data
 }
