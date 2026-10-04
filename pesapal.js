@@ -20,12 +20,29 @@ function baseUrl() {
 let cachedToken = null
 let cachedTokenExpiry = 0
 
+async function fetchWithTimeout(url, options, timeoutMs = 8000) {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), timeoutMs)
+  try {
+    return await fetch(url, { ...options, signal: controller.signal })
+  } catch (error) {
+    if (error?.name === 'AbortError') {
+      const timeoutError = new Error('PesaPal is taking too long to respond. Please try again.')
+      timeoutError.statusCode = 504
+      throw timeoutError
+    }
+    throw error
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
 async function getAccessToken() {
   if (cachedToken && Date.now() < cachedTokenExpiry) return cachedToken
   const consumerKey = process.env.PESAPAL_CONSUMER_KEY || process.env.CONSUMER_KEY
   const consumerSecret = process.env.PESAPAL_SECRET_KEY || process.env.CONSUMER_SECRET_KEY
   if (!consumerKey || !consumerSecret) throw new Error('PesaPal credentials are not configured. Add PESAPAL_CONSUMER_KEY and PESAPAL_SECRET_KEY.')
-  const res = await fetch(`${baseUrl()}/Auth/RequestToken`, {
+  const res = await fetchWithTimeout(`${baseUrl()}/Auth/RequestToken`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify({ consumer_key: consumerKey, consumer_secret: consumerSecret }),
@@ -42,7 +59,7 @@ async function getAccessToken() {
 
 async function submitOrder({ id, currency, amount, description, callbackUrl, notificationId, email, phone, firstName, lastName }) {
   const token = await getAccessToken()
-  const res = await fetch(`${baseUrl()}/Transactions/SubmitOrderRequest`, {
+  const res = await fetchWithTimeout(`${baseUrl()}/Transactions/SubmitOrderRequest`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
