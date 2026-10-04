@@ -13,13 +13,17 @@ module.exports = async function handler(req,res){
     if(String(password||'').length<8)return res.status(400).json({message:'Password must contain at least 8 characters.'})
     if(!String(fullName||'').trim())return res.status(400).json({message:'Full name is required.'})
     if(!String(location||'').trim())return res.status(400).json({message:'Location is required.'})
-    await ensureSchema()
-    const exists=await getPool().query('SELECT id FROM tp_users WHERE email=$1 LIMIT 1',[normalized])
-    if(exists.rowCount)return res.status(409).json({message:'An account with this email already exists.'})
-    const auth = await signUp(normalized, password, { fullName: String(fullName).trim(), location: String(location).trim(), phone: String(phone || '').trim(), referralCode: String(referralCode || '').trim() })
+    const profile = { fullName: String(fullName).trim(), location: String(location).trim(), phone: String(phone || '').trim(), referralCode: String(referralCode || '').trim() }
+    const auth = await signUp(normalized, password, profile)
     const id = auth.user?.id || crypto.randomUUID()
-    const passwordHashPlaceholder = crypto.createHash('sha256').update(`${id}:${normalized}`).digest('hex')
-    const user=await getPool().query(`INSERT INTO tp_users (id,email,name,location,phone,password_salt,password_hash,referral_code,auth_provider) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'supabase') RETURNING *`,[id,normalized,String(fullName).trim(),String(location).trim(),String(phone||'').trim(),'supabase',passwordHashPlaceholder,String(referralCode||'').trim()||null])
+    let user = { rows: [{ id, email: normalized, name: profile.fullName, location: profile.location, phone: profile.phone, referral_code: profile.referralCode || null, auth_provider: 'supabase' }] }
+    try {
+      await ensureSchema()
+      const passwordHashPlaceholder = crypto.createHash('sha256').update(`${id}:${normalized}`).digest('hex')
+      user = await getPool().query(`INSERT INTO tp_users (id,email,name,location,phone,password_salt,password_hash,referral_code,auth_provider) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'supabase') ON CONFLICT (email) DO UPDATE SET name=EXCLUDED.name, location=EXCLUDED.location, phone=EXCLUDED.phone, referral_code=EXCLUDED.referral_code RETURNING *`,[id,normalized,profile.fullName,profile.location,profile.phone,'supabase',passwordHashPlaceholder,profile.referralCode || null])
+    } catch (profileError) {
+      console.error('[v0] Supabase account created but profile sync failed:', profileError.message)
+    }
     res.status(201).json({token: auth.access_token || '', user: publicUser(user.rows[0]), requiresEmailConfirmation: !auth.access_token})
   }catch(e){console.error('[auth/signup]',e);const code=Number(e?.statusCode)||(/POSTGRES_URL|database|connection|connect/i.test(String(e?.message||''))?503:500);res.status(code).json({message:e?.message||'Unable to create your account right now.'})}
 }
