@@ -14,8 +14,10 @@ async function supabaseRequest(path, body, headers = {}) {
   })
   const data = await response.json().catch(() => ({}))
   if (!response.ok) {
-    const error = new Error(data.error_description || data.msg || data.message || data.error || 'Supabase authentication failed.')
-    error.statusCode = response.status === 429 ? 429 : response.status >= 500 ? 503 : 401
+    const rawMessage = data.error_description || data.msg || data.message || data.error || 'Supabase authentication failed.'
+    const isRateLimited = response.status === 429 || /rate limit|too many|email.*sent|over_email_send_rate_limit/i.test(String(rawMessage))
+    const error = new Error(isRateLimited ? 'Too many signup emails were requested. Please wait a few minutes before trying again.' : rawMessage)
+    error.statusCode = isRateLimited ? 429 : response.status >= 500 ? 503 : 401
     throw error
   }
   return data

@@ -25,5 +25,5 @@ module.exports = async function handler(req,res){
       console.error('[v0] Supabase account created but profile sync failed:', profileError.message)
     }
     res.status(201).json({token: auth.access_token || '', user: publicUser(user.rows[0]), requiresEmailConfirmation: !auth.access_token})
-  }catch(e){console.error('[auth/signup]',e);const code=Number(e?.statusCode)||(/POSTGRES_URL|database|connection|connect/i.test(String(e?.message||''))?503:500);res.status(code).json({message:e?.message||'Unable to create your account right now.'})}
+  }catch(e){console.error('[auth/signup]',e);const code=Number(e?.statusCode)||(/POSTGRES_URL|database|connection|connect/i.test(String(e?.message||''))?503:500);if(code===429)res.setHeader('Retry-After','300');res.status(code).json({message:e?.message||'Unable to create your account right now.',code:code===429?'EMAIL_RATE_LIMIT':'SIGNUP_ERROR'})}
 }
