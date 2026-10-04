@@ -22,9 +22,9 @@ let cachedTokenExpiry = 0
 
 async function getAccessToken() {
   if (cachedToken && Date.now() < cachedTokenExpiry) return cachedToken
-  const consumerKey = process.env.CONSUMER_KEY
-  const consumerSecret = process.env.CONSUMER_SECRET_KEY
-  if (!consumerKey || !consumerSecret) throw new Error('PesaPal credentials are not configured.')
+  const consumerKey = process.env.PESAPAL_CONSUMER_KEY || process.env.CONSUMER_KEY
+  const consumerSecret = process.env.PESAPAL_SECRET_KEY || process.env.CONSUMER_SECRET_KEY
+  if (!consumerKey || !consumerSecret) throw new Error('PesaPal credentials are not configured. Add PESAPAL_CONSUMER_KEY and PESAPAL_SECRET_KEY.')
   const res = await fetch(`${baseUrl()}/Auth/RequestToken`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },

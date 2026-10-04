@@ -32,7 +32,9 @@ function cookie(name, value, maxAge) {
   return `${name}=${encodeURIComponent(value)}; Max-Age=${maxAge}; Path=/; HttpOnly; Secure; SameSite=Lax`
 }
 function redirectUri(req) {
-  return String(process.env.LINKEDIN_REDIRECT_URI || `${req.headers['x-forwarded-proto'] || 'https'}://${req.headers.host}/api/v1/auth/linkedin/callback`).replace(/\/$/, '')
+  const forwardedProto = String(req.headers['x-forwarded-proto'] || 'https').split(',')[0].trim()
+  const host = String(req.headers['x-forwarded-host'] || req.headers.host || '').split(',')[0].trim()
+  return String(process.env.LINKEDIN_REDIRECT_URI || `${forwardedProto}://${host}/api/v1/auth/linkedin/callback`).replace(/\/$/, '')
 }
 function fail(res, status, message) {
   const target = String(process.env.LINKEDIN_ERROR_REDIRECT || '/#/login')

@@ -4,6 +4,9 @@ let pool
 let schemaReady
 
 function getPool() {
+  if (!process.env.POSTGRES_URL) {
+    throw new Error('POSTGRES_URL is not configured for authentication and payments.')
+  }
   if (!pool) {
     pool = new Pool({
       connectionString: process.env.POSTGRES_URL,
