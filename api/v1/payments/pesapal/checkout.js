@@ -1,1 +1,1 @@
-module.exports = require('../../../../checkout')
+module.exports = require('../checkout')
